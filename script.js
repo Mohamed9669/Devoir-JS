@@ -1,9 +1,17 @@
+const form = document.querySelector("form");
+
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  ajouterClient();
+});
+
 let clients = [
   {
     nom: "Mouhamed",
     prenom: "Fall",
     telephone: "77 903 28 91",
     DateNaissance: "22/07/2001",
+    categorie: "Non solvable",
     MontantDette: "230000",
   },
   {
@@ -11,6 +19,7 @@ let clients = [
     prenom: "Diop",
     telephone: "78 938 01 37",
     DateNaissance: "02/07/2004",
+    categorie: "Solvable",
     MontantDette: "289000",
   },
   {
@@ -18,6 +27,7 @@ let clients = [
     prenom: "Ndione",
     telephone: "77 829 01 91",
     DateNaissance: "22/07/2001",
+    categorie: "Fidéle",
     MontantDette: "18390",
   },
 ];
@@ -28,15 +38,23 @@ function afficherTableau(donnees) {
   tbody.innerHTML = "";
   donnees.forEach((element) => {
     const tr = document.createElement("tr");
+    tr.classList.add(
+      "bg-white",
+      "border-b",
+      "dark:bg-gray-800",
+      "dark:border-gray-700"
+    );
     tr.innerHTML = `
-          <td class="px-6 py-4">${element.nom}</td>
-          <td class="px-6 py-4">${element.prenom}</td>
-          <td class="px-6 py-4">${element.telephone}</td>
-          <td class="px-6 py-4">${element.DateNaissance}</td>
-          <td class="px-6 py-4">${element.MontantDette}</td>
-          <td class="px-6 py-4"><a type="link" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Voir</a>
-</td>
-        `;
+      <td class="px-6 py-4">${element.nom}</td>
+      <td class="px-6 py-4">${element.prenom}</td>
+      <td class="px-6 py-4">${element.telephone}</td>
+      <td class="px-6 py-4">${element.DateNaissance}</td>
+     <td class="px-6 py-4">${element.categorie}</td>
+      <td class="px-6 py-4">${element.MontantDette}</td>
+      <td class="px-6 py-4">
+        <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Voir</button>
+      </td>
+    `;
     tbody.appendChild(tr);
   });
 }
@@ -44,30 +62,29 @@ function afficherTableau(donnees) {
 afficherTableau(clients);
 
 function ajouterClient() {
-  const nom = document.getElementById("nom").value;
-  const prenom = document.getElementById("prenom").value;
-  const telephone = document.getElementById("telephone").value;
-  const DateNaissance = document.getElementById("DateNaissance").value;
-  const MontantDette = document.getElementById("MontantDette").value;
+  const nom = document.getElementById("nom").value.trim();
+  const prenom = document.getElementById("prenom").value.trim();
+  const telephone = document.getElementById("telephone").value.trim();
+  const DateNaissance = document.getElementById("DateNaissance").value.trim();
+  const MontantDette = document.getElementById("MontantDette").value.trim();
 
-  const nouveauClient = {
-    nom: nom,
-    prenom: prenom,
-    telephone: telephone,
-    DateNaissance: DateNaissance,
-    MontantDette: MontantDette,
-  };
+  if (nom && prenom && telephone && DateNaissance && MontantDette) {
+    const nouveauClient = {
+      nom,
+      prenom,
+      telephone,
+      DateNaissance,
+      MontantDette,
+    };
 
-  clients.push(nouveauClient);
-  afficherTableau(clients);
+    clients.push(nouveauClient);
+    afficherTableau(clients);
 
-  document.getElementById("nom").value = "";
-  document.getElementById("prenom").value = "";
-  document.getElementById("telephone").value = "";
-  document.getElementById("DateNaissance").value = "";
-  document.getElementById("MontantDette").value = "";
+    form.reset();
+
+    const modal = document.getElementById("default-modal");
+    modal.classList.add("hidden");
+  } else {
+    alert("Veuillez remplir tous les champs.");
+  }
 }
-
-document
-  .getElementById("bouton-ajouter")
-  .addEventListener("click", ajouterClient);
